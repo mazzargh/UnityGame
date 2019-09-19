@@ -527,6 +527,7 @@ MonoBehaviour:
     m_Bits: 512
   jumpForce: 0.5
   gravity: 1
+  stickToGroundForce: 0
   ySpeed: 0
 --- !u!1 &1629331724
 GameObject:

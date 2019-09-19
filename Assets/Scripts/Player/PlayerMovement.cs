@@ -70,7 +70,15 @@ public class PlayerMovement : MonoBehaviour
         if (grounded && ySpeed <= 0)
         {
             ySpeed = -gravity/100;
-            stickToGroundForce = -10;
+            if (!CentreMassIsGrounded())
+            {
+                stickToGroundForce = 0;
+            }
+            else
+            {
+                stickToGroundForce = -10;
+            }
+            
 
         }
         else
@@ -92,10 +100,10 @@ public class PlayerMovement : MonoBehaviour
         
     }
 
-    /*
-    private bool IsGrounded()
+    
+    private bool CentreMassIsGrounded()
     {
-        // Fire raycast to check for ground - just fire from centre for now
+       
         float length = 1.1f; // length of raycast to search for ground
         RaycastHit hit;
         Debug.DrawRay(transform.position, -Vector3.up, Color.red);
@@ -105,7 +113,7 @@ public class PlayerMovement : MonoBehaviour
         }
         return false;
     }
-    */
+    
 
     private void Jump()
     {
