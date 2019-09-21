@@ -201,13 +201,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 10
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 512
   jumpForce: 0.5
   gravity: 1
   stickToGroundForce: 0
   ySpeed: 0
+  wallSlideSpeed: 0
+  wallJumpForce: 0.6
+  impactVector: {x: 0, y: 0, z: 0}
 --- !u!143 &3819391085092307606
 CharacterController:
   m_ObjectHideFlags: 0
