@@ -6,8 +6,6 @@ public class PassthruScript : MonoBehaviour
 {
 
 	public Collider collider1;
-	public Collider playerCollider;
-
 
 	private void OnTriggerEnter(Collider other) {
 		//Debug.Log("enter");

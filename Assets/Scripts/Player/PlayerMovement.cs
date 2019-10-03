@@ -50,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
         wallToRight = CheckPlayerCollision(Vector3.right, 1f, 1 << 10);
         hitCeiling = CheckPlayerCollision(Vector3.up, 1.15f, 1 << 9 | 1 << 10);
 
-        if (hitCeiling)
+        if ((controlTest.collisionFlags & CollisionFlags.Above) != 0 && (ySpeed > 0 || impactVector.y > 0))
         {
             Debug.Log("hitting");
             ySpeed = -gravity/100;
