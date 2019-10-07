@@ -7,16 +7,20 @@ public class PassthruScript : MonoBehaviour
 
 	public Collider collider1;
 
-	private void OnTriggerEnter(Collider other) {
+	private void OnTriggerEnter(Collider other) 
+	{
 		//Debug.Log("enter");
-		if (other.gameObject.tag == "Player") {
+		if (other.gameObject.tag == "Player") 
+		{
 			Physics.IgnoreCollision(collider1, other, true);
 		}
 	}
 
-	private void OnTriggerExit(Collider other) {
+	private void OnTriggerExit(Collider other) 
+	{
 		//Debug.Log("Exit");
-		if (other.gameObject.tag == "Player") {
+		if (other.gameObject.tag == "Player") 
+		{
 			Physics.IgnoreCollision(collider1, other, false);
 		}
 	}

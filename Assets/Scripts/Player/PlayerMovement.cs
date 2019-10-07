@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     private bool wallSliding = false;
 
     private bool centreMassGrounded = false;
+    private bool abovePassplat;
     private bool wallToRight = false;
     private bool wallToLeft = false;
     private bool hitCeiling = false;
@@ -84,8 +85,13 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (Input.GetKeyDown("s"))
-        {
-            Physics.IgnoreCollision(playerCollider, passPlatform, true);
+        {	
+        	abovePassplat = CheckPlayerCollision(-Vector3.up, 1.2f, 1 << 11);
+        	if (abovePassplat | !grounded) 
+        	{
+        		grounded = false;
+            	Physics.IgnoreCollision(playerCollider, passPlatform, true);
+            }
         }
         
         CalculateGravity();
@@ -117,7 +123,7 @@ public class PlayerMovement : MonoBehaviour
         if (grounded && ySpeed <= 0)
         {
             ySpeed = -gravity/100;
-            centreMassGrounded = CheckPlayerCollision(-Vector3.up, 1.2f, 1 << 9 );
+            centreMassGrounded = CheckPlayerCollision(-Vector3.up, 1.2f, 1 << 9 | 11);
             if (centreMassGrounded)
             {
                 stickToGroundForce = -10;
@@ -205,7 +211,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (other.gameObject.tag == "Passthrough") 
         {
-            passPlatform = other.gameObject.GetComponent<Collider>();
+            passPlatform = other.GetComponent<Collider>();
         }
     }
 }
