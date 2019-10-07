@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody playerRB;
     public float maxSpeed = 5f;
+    public Collider playerCollider;
     //public float acceleration;
 
     private bool facingRight = true;
@@ -32,6 +33,8 @@ public class PlayerMovement : MonoBehaviour
 
     private float inputDirection;
     public Vector3 impactVector = Vector3.zero;
+
+    public Collider passPlatform;
 
 
     // Start is called before the first frame update
@@ -79,6 +82,12 @@ public class PlayerMovement : MonoBehaviour
                 WallJump();
             }
         }
+
+        if (Input.GetKeyDown("s"))
+        {
+            Physics.IgnoreCollision(playerCollider, passPlatform, true);
+        }
+        
         CalculateGravity();
         Rotate();
         Move();
@@ -108,7 +117,7 @@ public class PlayerMovement : MonoBehaviour
         if (grounded && ySpeed <= 0)
         {
             ySpeed = -gravity/100;
-            centreMassGrounded = CheckPlayerCollision(-Vector3.up, 1.2f, 1 << 9);
+            centreMassGrounded = CheckPlayerCollision(-Vector3.up, 1.2f, 1 << 9 );
             if (centreMassGrounded)
             {
                 stickToGroundForce = -10;
@@ -190,5 +199,13 @@ public class PlayerMovement : MonoBehaviour
     {
         direction.Normalize();
         impactVector += direction.normalized * wallJumpForce;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Passthrough") 
+        {
+            passPlatform = other.gameObject.GetComponent<Collider>();
+        }
     }
 }
