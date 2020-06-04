@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private Rigidbody playerRB;
     public float maxSpeed = 5f;
     public Collider playerCollider;
-    //public float acceleration;
 
     private bool facingRight = true;
    // public LayerMask groundLayer;
@@ -21,7 +19,6 @@ public class PlayerMovement : MonoBehaviour
     public float wallJumpForce = 1;
 
     private bool grounded = false;
-    private bool jumping = true;
     private bool wallSliding = false;
 
     private bool centreMassGrounded = false;
@@ -41,8 +38,6 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //playerRB = GetComponent<Rigidbody>();
-
         controlTest = GetComponent<CharacterController>();
     }
 
@@ -102,19 +97,9 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-   
-    }
-
     private void Move()
     {
-        //playerRB.velocity = new Vector3(inputDirection * maxSpeed, playerRB.velocity.y, 0);
-
         Vector3 velocity = new Vector3(inputDirection * maxSpeed * Time.deltaTime, ySpeed + stickToGroundForce, 0);
-        //transform.Translate(velocity);
-
         controlTest.Move(velocity + impactVector);
     }
 
@@ -180,7 +165,6 @@ public class PlayerMovement : MonoBehaviour
     private void Jump()
     {
         ySpeed = jumpForce;
-        //Debug.Log(ySpeed);
     }
 
     private void WallJump()
@@ -201,8 +185,9 @@ public class PlayerMovement : MonoBehaviour
         AddImpact(dir);
     }
 
-    private void AddImpact(Vector3 direction)
+    public void AddImpact(Vector3 direction)
     {
+        Debug.Log("adding impact");
         direction.Normalize();
         impactVector += direction.normalized * wallJumpForce;
     }
