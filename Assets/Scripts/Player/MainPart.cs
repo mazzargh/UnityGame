@@ -6,12 +6,17 @@ using UnityEngine;
 public class MainPart : MonoBehaviour, IControllable
 {
     [SerializeField] private List<Attachable> validParts = new List<Attachable>();
-    [SerializeField] private float runSpeed = 1f;
+    [SerializeField] private Attachable leftLeg = null;
+    [SerializeField] private Attachable rightLeg = null;
+    [SerializeField] private float runSpeed = 1.5f;
+    [SerializeField] private float hopSpeed = 1f;
     [SerializeField] private float partDetectionRadius = 5f;
-    [SerializeField] private LayerMask playerMask = 0;
+    [SerializeField] private LayerMask attachableLayerMask = 0;
 
     private Dictionary<Attachable, Vector3> validPartPositions = new Dictionary<Attachable, Vector3>();
-    public List<Attachable> attachedParts = new List<Attachable>();
+    private List<Attachable> attachedParts = new List<Attachable>();
+
+
 
     private PlayerController playerController;
 
@@ -36,7 +41,7 @@ public class MainPart : MonoBehaviour, IControllable
     public List<Attachable> FindNearDetachedParts()
     {
         List<Attachable> nearParts = new List<Attachable>();
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, partDetectionRadius, playerMask);
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, partDetectionRadius, attachableLayerMask);
         foreach (Collider c in hitColliders)
         {
             Attachable part = c.GetComponent<Attachable>();
@@ -54,6 +59,32 @@ public class MainPart : MonoBehaviour, IControllable
         {
             part.Attach(this, validPartPositions[part]);
             attachedParts.Add(part);
+            if (part.partType == BodyPart.LEFTLEG || part.partType == BodyPart.RIGHTLEG)
+            {
+                AttachLeg(part);
+            }
+        }
+    }
+
+    private void AttachLeg(Attachable part)
+    {
+        if (part.partType == BodyPart.LEFTLEG)
+        {
+            if (!rightLeg)
+            {
+                // attaching one leg so increase size of player controller
+                playerController.ChangeSize(2.5f);
+            }
+            leftLeg = part;
+        }
+        else if (part.partType == BodyPart.RIGHTLEG)
+        {
+            if (!leftLeg)
+            {
+                // attaching one leg so increase size of player controller
+                playerController.ChangeSize(2.5f);
+            }
+            rightLeg = part;
         }
     }
 
@@ -72,16 +103,54 @@ public class MainPart : MonoBehaviour, IControllable
         {
             part.Detach();
             attachedParts.Remove(part);
+            if (part.partType == BodyPart.LEFTLEG || part.partType == BodyPart.RIGHTLEG)
+            {
+                DetachLeg(part);
+            }
+        }
+    }
+
+    private void DetachLeg(Attachable part)
+    {
+        if (part.partType == BodyPart.LEFTLEG)
+        {
+            if (!rightLeg)
+            {
+                // detaching one leg so increase size of player controller
+                playerController.ChangeSize(2f);
+            }
+            leftLeg = null;
+        }
+        else if (part.partType == BodyPart.RIGHTLEG)
+        {
+            if (!leftLeg)
+            {
+                // attaching one leg so increase size of player controller
+                playerController.ChangeSize(2f);
+            }
+            rightLeg = null;
         }
     }
 
     public void Move()
     {
-        // hop if one leg attached (with slower speed)
-        // run if both attached
-        // only rotate character if no legs attached
+        float speed = 0;
+        if (leftLeg && rightLeg)
+        {
+            // run
+            speed = runSpeed;
+        }
+        else if (leftLeg || rightLeg)
+        {
+            // hop
+            speed = hopSpeed;
+        }
+        else
+        {
+            // only rotate direction
+        }
 
-        Vector3 dir = new Vector3(Input.GetAxis("Horizontal")*Time.deltaTime*runSpeed, playerController.YSpeed, 0);
+        Vector3 dir = new Vector3(Input.GetAxis("Horizontal")*Time.deltaTime*speed, playerController.YSpeed, 0);
         playerController.Move(dir);
     }
 

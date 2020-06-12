@@ -79,4 +79,12 @@ public class PlayerController : MonoBehaviour
     {
         enableGravity = true;
     }
+
+    public void ChangeSize(float size)
+    {
+        float sizeDifference = size - controller.height;
+        Vector3 newCenter = new Vector3(controller.center.x, controller.center.y - sizeDifference/2, controller.center.z);
+        controller.height = size;
+        controller.center = newCenter;
+    }
 }

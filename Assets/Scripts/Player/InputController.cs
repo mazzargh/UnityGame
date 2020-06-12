@@ -37,27 +37,41 @@ public class InputController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            List<Attachable> nearParts = mainPart.FindNearDetachedParts();
-            if (nearParts.Count > 0)
-            {
-                foreach (Attachable part in nearParts)
+            List<Attachable> partsInRange = mainPart.FindNearDetachedParts();
+            if (controllable.Equals(mainPart))
+            {     
+                if (partsInRange.Count > 0)
                 {
-                    part.Stop();
-                    mainPart.AttachPart(part);
-                    RemoveSeparatePart(part);
-                }
-                if (controllable.GetTransform != mainPart.transform)
+                    foreach (Attachable part in partsInRange)
+                    {
+                        part.Stop();
+                        mainPart.AttachPart(part);
+                        RemoveSeparatePart(part);
+                    }
                     SwitchControllable(mainPart);
+                }
+                else
+                {
+                    Attachable detachedPart = mainPart.GetNextPart();
+                    if (detachedPart != null)
+                    {
+                        mainPart.DetachPart(detachedPart);
+                        AddSeparatePart(detachedPart);
+                    }
+                }
             }
+            // controlling something else
             else
             {
-                Attachable detachedPart = mainPart.GetNextPart();
-                if (detachedPart != null)
+                Attachable attachable = controllable.GetTransform.GetComponent<Attachable>();
+                if (attachable && partsInRange.Contains(attachable))
                 {
-                    mainPart.DetachPart(detachedPart);
-                    AddSeparatePart(detachedPart);
-                }       
-            }       
+                    attachable.Stop();
+                    mainPart.AttachPart(attachable);
+                    RemoveSeparatePart(attachable);
+                    SwitchControllable(mainPart);
+                }
+            }                 
         }
         if (MovementEnabled)
             controllable.Move();

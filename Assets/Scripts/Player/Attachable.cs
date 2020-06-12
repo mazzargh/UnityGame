@@ -10,6 +10,8 @@ public class Attachable : MonoBehaviour, IControllable
     PlayerController playerController;
     [SerializeField] private float runSpeed = 5f;
 
+    public BodyPart partType;
+
     public Transform GetTransform => transform;
 
     private void Awake()

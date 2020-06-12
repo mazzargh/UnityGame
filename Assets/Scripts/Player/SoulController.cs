@@ -34,7 +34,6 @@ public class SoulController : MonoBehaviour
 
     public void SwitchTarget(Transform t)
     {
-        Debug.Log("switching");
         transform.SetParent(null);
         target = t;
         switchingTarget = true;
